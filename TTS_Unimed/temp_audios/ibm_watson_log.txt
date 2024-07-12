@@ -1,0 +1,180 @@
+[2024-07-11 14:54:23] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 14:54:23] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.mp3
+[2024-07-11 14:57:20] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 14:57:20] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.mp3
+[2024-07-11 14:59:41] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 14:59:41] Erro na requisição - HTTP Code: 400, Resposta: {
+   "error": "unable to transcode data stream audio/l16 -> audio/wav ",
+   "code": 400,
+   "code_description": "Bad Request"
+}
+[2024-07-11 15:00:28] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 15:00:28] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 15:01:51] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 15:01:51] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 16:16:30] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 16:16:30] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 16:17:24] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 16:17:24] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 16:18:33] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 16:18:33] Erro na requisição - HTTP Code: 400, Resposta: {
+   "error": "unable to transcode data stream audio/l16 -> audio/wav ",
+   "code": 400,
+   "code_description": "Bad Request"
+}
+[2024-07-11 16:18:48] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 16:18:48] Erro na requisição - HTTP Code: 400, Resposta: {
+   "error": "unable to transcode data stream audio/l16 -> audio/wav ",
+   "code": 400,
+   "code_description": "Bad Request"
+}
+[2024-07-11 16:19:08] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 16:19:08] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 16:19:35] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 16:19:35] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 16:24:47] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 16:24:47] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 16:25:09] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 16:25:09] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 16:26:22] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 16:26:22] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 16:28:03] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 16:28:03] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 16:30:01] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 16:30:01] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 16:30:42] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 16:30:42] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 16:35:04] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 16:35:04] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.mp3
+[2024-07-11 16:40:23] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 16:40:23] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.mp3
+[2024-07-11 16:44:30] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 16:44:30] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.mp3
+[2024-07-11 16:49:05] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 16:49:05] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.mp3
+[2024-07-11 16:51:10] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 16:51:10] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 16:51:41] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 16:51:41] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 16:59:57] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 16:59:57] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:00:30] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:00:30] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:02:03] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:02:03] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:03:19] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:03:19] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:04:34] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:04:34] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:05:11] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:05:11] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:05:28] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:05:28] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:06:28] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:06:28] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:06:48] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:06:48] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:07:01] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:07:01] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:07:24] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:07:24] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:08:15] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:08:15] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:08:57] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:08:57] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:12:02] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:12:02] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:12:34] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:12:34] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:12:41] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:12:41] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:14:11] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:14:11] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:15:02] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:15:02] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:15:23] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:15:23] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:16:26] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:16:26] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:19:04] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:19:04] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:19:30] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:19:30] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:21:08] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:21:08] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:22:23] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:22:23] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:22:33] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:22:33] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:23:02] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:23:02] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:23:09] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:23:09] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:27:57] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:27:57] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:29:08] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:29:08] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:29:30] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:29:30] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:29:40] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:29:40] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:30:27] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:30:27] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:31:04] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:31:04] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:31:29] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:31:29] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:32:01] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:32:01] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:32:33] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:32:33] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:36:55] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:36:55] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:40:52] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:40:52] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:43:08] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:43:08] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.alaw
+[2024-07-11 17:43:45] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:43:45] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.alaw
+[2024-07-11 17:46:39] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:46:39] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:48:10] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:48:10] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:48:26] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:48:26] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:49:17] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:49:17] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:49:32] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:49:32] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:50:05] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:50:05] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:53:54] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:53:54] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:54:06] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:54:06] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:57:25] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:57:25] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 17:57:55] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 17:57:55] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 18:00:05] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 18:00:05] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 18:03:01] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 18:03:01] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 18:03:44] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 18:03:44] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 18:04:06] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 18:04:06] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 18:04:16] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 18:04:16] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 18:04:39] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 18:04:39] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 18:05:43] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 18:05:43] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 18:06:37] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 18:06:37] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 18:13:16] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 18:13:16] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 18:14:05] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 18:14:05] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
+[2024-07-11 18:18:03] Requisição para sintetização de áudio - Texto: Você está ligando do número nove nove um quatro quatro sete sete zero zero, Voz: pt-BR_IsabelaV3Voice, ID: 991447700
+[2024-07-11 18:18:03] Áudio sintetizado com sucesso - Arquivo: /var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios/991447700.wav
