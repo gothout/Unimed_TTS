@@ -7,9 +7,9 @@
  ********************************************* */
 
 // Incluir as classes necessárias
-require_once 'TTS_Unimed/IBMWatsonTextToSpeech.php'; // Sua classe IBMWatsonTextToSpeech
-require_once 'TTS_Unimed/AudioConverter.php'; // Classe para conversão de áudio
-require_once('phpagi.php'); // Classe AGI
+require_once 'IBMWatsonTextToSpeech.php'; // Sua classe IBMWatsonTextToSpeech
+require_once 'AudioConverter.php'; // Classe para conversão de áudio
+require_once('/var/lib/asterisk/agi-bin/phpagi.php'); // Classe AGI
 
 // Configurações da IBM Watson TTS
 $apiKey = "3BSntQGR_4zEjkh6WqOZqIlpe9T6xTi-iuwzJXXb5IDq";
@@ -28,19 +28,28 @@ $ibmWatson = new IBMWatsonTextToSpeech($apiKey, $baseUrl, $work_dir);
 // Instanciar a classe AudioConverter
 $converter = new AudioConverter();
 
+function delAudio($alawFile, $agi) {
+    unlink($alawFile);
+    $alawFile_aux = $alawFile . ".alaw";
+    unlink($alawFile_aux);
+    $agi->verbose("Removido arquivo temporario: " . $alawFile . " e seu arquivo auxiliar " . $alawFile_aux);
+}
+function mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter) {
+    $outputFile = $ibmWatson->synthesizeAudio($texto, $voice, $id);
+    $alawFile = $converter->convertToAlaw($outputFile, $work_dir, $id);
+    $agi->exec("Playback", $alawFile);
+    $agi->verbose("Gerado arquivo de aúdio temporario " . $alawFile . " e seu arquivo auxiliar " . $alawFile_aux);
+    return $alawFile; // retorna para remoção na função delAudio
+}
+
 try {
     // Etapa 0: Texto inicial para interação com o usuário
     $cliente = "Lucas";
     $texto = "Olá, tudo bem? Eu preciso falar com $cliente, é você? Digite '1 para Sim' e '2 para Não'";
     $id = "991447700"; 
 
-    $outputFile = $ibmWatson->synthesizeAudio($texto, $voice, $id);
-    $alawFile = $converter->convertToAlaw($outputFile, $work_dir, $id);
-    $agi->exec("Playback", $alawFile);
-
-    unlink($alawFile);
-    $alawFile_aux = $alawFile . ".alaw";
-    unlink($alawFile_aux);
+    $alawFile = mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
+    delAudio($alawFile, $agi);
 
     // Aguardar a resposta DTMF do usuário
     $result = $agi->get_data('beep', 10000, 1); // Captura DTMF com timeout de 10 segundos
@@ -56,11 +65,9 @@ try {
                     $id,
                     caso queira ouvir
                     novamente digite um";
-                    $outputFile = $ibmWatson->synthesizeAudio($texto, $voice, $id);
-                    $alawFile = $converter->convertToAlaw($outputFile, $work_dir, $id);
-                    $agi->exec("Playback", $alawFile);
-
-        $result = $agi->get_data('beep', 10000, 1); // Captura DTMF com timeout de 10 segundos
+        $alawFile = mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
+        delAudio($alawFile, $agi);
+        $result = $agi->get_data('beep', 10000, 1);
         $dtmf = $result['result'];
         if ($dtmf === '1') {
             $agi->verbose("Usuario digitou 1 para escutar.");
@@ -71,17 +78,14 @@ try {
 
             $agi->hangup();
         }
-    // Lógica para continuar com a chamada
-    } elseif ($dtmf === '2') {
-        $agi->verbose("Usuário digitou '2' para Não.");
-        // Lógica para lidar com a resposta Não
+    } elseif ($dtmf === '2' || empty($dtmf)) {
+        $agi->verbose("Usuário digitou '2' para Não ou não respondeu.");
     } else {
         $agi->verbose("Resposta inválida: $dtmf");
         // Lógica para lidar com resposta inválida
     }
 
 } catch (Exception $e) {
-    // Lidar com qualquer exceção ocorrida durante a síntese de áudio
     $agi->verbose("Erro ao sintetizar ou converter áudio: " . $e->getMessage());
 }
 
