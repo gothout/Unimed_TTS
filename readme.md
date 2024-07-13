@@ -11,4 +11,4 @@ Os arquivos pelo fluxo deverão esta no repositório AGI.
 
 ## Fluxo de clientes inadimplentes para CPF :
 
-![CPF - Inadimplentes](images/cpf-fluxo.jpg)
+![CPF - Inadimplentes](fluxograma/cpf-fluxo.jpg)
