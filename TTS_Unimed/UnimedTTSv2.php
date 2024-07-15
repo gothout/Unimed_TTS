@@ -17,6 +17,20 @@ $apiKey = "3BSntQGR_4zEjkh6WqOZqIlpe9T6xTi-iuwzJXXb5IDq";
 $baseUrl = "https://api.us-south.text-to-speech.watson.cloud.ibm.com/instances/0f310545-b3e4-44af-9407-c954cd25b03f";
 $voice = 'pt-BR_IsabelaV3Voice';
 
+
+//variaveis de texto
+$imut_audiosDir = '/var/lib/asterisk/agi-bin/TTS_Unimed/imut_audios/';
+$etapa_inicialv1 = 'etapa_inicialv1.wav';
+/*Olá tudo bem? Eu preciso falar com..*/
+
+$etapa_inicialv2 = 'etapa_inicialv2.wav';
+/*É você?*/
+
+$digite_novamente = 'digite_novamente.wav';
+/*Desculpe, não consegui confirmar a informação,
+poderia digitar novamente?
+*/
+
 // Diretorio para salvar os arquivos temporarios
 $work_dir = '/var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios';
 
@@ -36,33 +50,50 @@ function delAudio($alawFile, $agi) {
 function mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter) {
     $outputFile = $ibmWatson->synthesizeAudio($texto, $voice, $id);
     $alawFile = $converter->convertToAlaw($outputFile, $work_dir, $id);
-    $agi->exec("Backgroud", $alawFile);
     $agi->verbose("Gerado arquivo de áudio temporário " . $alawFile . " e seu arquivo auxiliar " . $alawFile_aux);
+    //$agi->exec("Playback", $alawFile); Playback removido para ser utilizado unitariamente.
+    
     return $alawFile; // retorna para remoção na função delAudio
 }
 
 try {
     // Etapa 0: Texto inicial para interação com o usuário
     $cliente = "Lucas";
-    $texto = "Olá, tudo bem? Eu preciso falar com $cliente, é você? Digite '1 para Sim' e '2 para Não'";
     $id = "991447700";
-
+    $texto = $cliente;
     $alawFile = mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
+    $agi->exec("Playback", $imut_audiosDir . $etapa_inicialv1);
+    $agi->exec("Playback", $alawFile);
+    $agi->exec("Playback", $imut_audiosDir . $etapa_inicialv2);
     delAudio($alawFile, $agi);
 
-    // Aguardar a resposta DTMF do usuário
-    $result = $agi->get_data('beep', 10000, 1); // Captura DTMF com timeout de 10 segundos
-    $dtmf = $result['result'];
-
-    if ($dtmf === '1') {
-        include_once 'etapaConfirmacao.php'; // Incluir arquivo da etapa de confirmação
-        EtapaConfirmacao::handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id); //Encaminhando para classe de confirmação.
-    } elseif ($dtmf === '2' || empty($dtmf)) {
-        $agi->verbose("Usuário digitou '2' para Não ou não respondeu.");
-        // Lógica para lidar com resposta '2' ou sem resposta
-    } else {
-        $agi->verbose("Resposta inválida: $dtmf");
-        // Lógica para lidar com resposta inválida
+    $max_attempts = 3;
+    $attempt = 0;
+    while ($attempt < $max_attempts) {
+        $dtmf = $agi->get_data('beep', 10000, 1)['result']; // Captura a entrada do usuário
+        if ($dtmf === '1') {
+            include_once 'etapaConfirmacao.php'; // Incluir arquivo da etapa de confirmação
+            EtapaConfirmacao::handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id); // Encaminhando para classe de confirmação.
+            break;
+        } elseif ($dtmf === '2') {
+            $agi->verbose("Usuário digitou '2' para Não.");
+            include_once 'etapaNegacao.php'; // Incluir arquivo da etapa de negação
+            EtapaNegacao::handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id); // Encaminhando para classe de negação.
+            break;
+        } elseif (empty($dtmf)) {
+            $agi->verbose("Usuário não respondeu.");
+            break;
+        } else {
+            $agi->verbose("Resposta inválida: $dtmf");
+            if ($attempt < $max_attempts - 1) {
+                $agi->exec("Playback", $imut_audiosDir . $digite_novamente); // Solicita que o usuário tente novamente
+            }
+        }
+        $attempt++;
+    }
+    if ($attempt == $max_attempts) {
+        $agi->verbose("Máximo de tentativas atingido sem resposta válida.");
+        // Lógica para lidar com o máximo de tentativas atingido
     }
 
 } catch (Exception $e) {
