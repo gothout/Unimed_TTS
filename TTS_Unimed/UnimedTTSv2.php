@@ -51,32 +51,87 @@ function mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter) {
     $outputFile = $ibmWatson->synthesizeAudio($texto, $voice, $id);
     $alawFile = $converter->convertToAlaw($outputFile, $work_dir, $id);
     $agi->verbose("Gerado arquivo de áudio temporário " . $alawFile . " e seu arquivo auxiliar " . $alawFile_aux);
-    //$agi->exec("Playback", $alawFile); Playback removido para ser utilizado unitariamente.
     
     return $alawFile; // retorna para remoção na função delAudio
 }
+
+// Função para enviar dados para API externa
+function sendToApi($data, $url = 'http://192.168.100.116:5000/webhook') {
+    $ch = curl_init();
+    
+    // Configuração da requisição cURL
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen(json_encode($data))
+    ));
+
+    // Executa a requisição e obtém a resposta
+    $response = curl_exec($ch);
+    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    
+    // Verifica se houve erro na requisição
+    if(curl_errno($ch)) {
+        $error_message = curl_error($ch);
+        curl_close($ch);
+        throw new Exception('Erro ao enviar requisição para API: ' . $error_message);
+    }
+    
+    // Verifica o código de resposta HTTP
+    if ($httpcode >= 400) {
+        curl_close($ch);
+        throw new Exception('Erro na API: Código ' . $httpcode);
+    }
+    
+    curl_close($ch);
+    
+    return $response;
+}
+
 
 try {
     // Etapa 0: Texto inicial para interação com o usuário
     $cliente = "Lucas";
     $id = "991447700";
     $texto = $cliente;
+    //$state = "chamada_atendida"; // Exemplo de estado para confirmação
+    //$data = array(
+    //    'id' => $id,
+    //    'state' => $state
+    //);
+    //sendToApi($data); // Enviar estado para a API
+    
     $alawFile = mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
     $agi->exec("Playback", $imut_audiosDir . $etapa_inicialv1);
     $agi->exec("Playback", $alawFile);
     $agi->exec("Playback", $imut_audiosDir . $etapa_inicialv2);
     delAudio($alawFile, $agi);
-
+    
     $max_attempts = 3;
     $attempt = 0;
     while ($attempt < $max_attempts) {
         $dtmf = $agi->get_data('beep', 10000, 1)['result']; // Captura a entrada do usuário
         if ($dtmf === '1') {
             include_once 'etapaConfirmacao.php'; // Incluir arquivo da etapa de confirmação
+            $state = "cliente_confirmou";
+            // $data = array(
+            //     'id' => $id,
+            //     'state' => $state
+            // );
+            // sendToApi($data); // Enviar estado para a API
             EtapaConfirmacao::handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id); // Encaminhando para classe de confirmação.
             break;
         } elseif ($dtmf === '2') {
             $agi->verbose("Usuário digitou '2' para Não.");
+            $state = "cliente_negou";
+            // $data = array(
+            //     'id' => $id,
+            //     'state' => $state
+            // );
+            // sendToApi($data); // Enviar estado para a API
             include_once 'etapaNegacao.php'; // Incluir arquivo da etapa de negação
             EtapaNegacao::handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id); // Encaminhando para classe de negação.
             break;
@@ -91,9 +146,16 @@ try {
         }
         $attempt++;
     }
+    
+    // Verifica se o loop terminou sem resposta válida e avisa
     if ($attempt == $max_attempts) {
-        $agi->verbose("Máximo de tentativas atingido sem resposta válida.");
-        // Lógica para lidar com o máximo de tentativas atingido
+        $agi->verbose("Máximo de tentativas atingido sem resposta válida. Avisando API.");
+        // $state = "tentativa_sem_resposta";
+        // $data = array(
+        //     'id' => $id,
+        //     'state' => $state
+        // );
+       //  sendToApi($data); // Enviar estado para a API
     }
 
 } catch (Exception $e) {
