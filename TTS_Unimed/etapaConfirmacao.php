@@ -25,6 +25,13 @@ Unimed Blumenau agradece
 por sua atenção
 */
 
+$ouvir_novamente_1 = 'ouvir_novamente_1.wav';
+/*Caso queira ouvir novamente, digite 1*/
+
+$data_aniversario = 'data_aniversario.wav';
+/*Agora, informando somente números, digite seu dia e mês de aniversário, com os 4 dígitos.*/
+
+
 // Nome de arquivos de áudios imutáveis (sem extensão)
 $etapa_inicial_cpf1v1 = 'etapa_inicial_cpf_1v1.wav';
 /*Sou a Anne da Unimed
@@ -49,8 +56,7 @@ números do seu CPF
 
 
 
-$ouvir_novamente_1 = 'ouvir_novamente_1.wav';
-/*Caso queira ouvir novamente, digite 1*/
+
 
 class EtapaConfirmacao {
     public static function handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id) {
@@ -69,9 +75,9 @@ class EtapaConfirmacao {
         
         // Loop para permitir ouvir novamente
         while (true) {
-            /*  @@@@@@
-                Depois mudar aqui para apenas reproduzir o protocolo 
-                @@@@@@*/
+            /*@@@@@@
+            Depois mudar aqui para apenas reproduzir o protocolo 
+            @@@@@@*/
             $texto = $imut_audiosDir . $etapa_inicial_cpf1v1;
             $agi->verbose("Texto imutavel reproduzido: " . $texto);
             $agi->exec("Playback", $texto);
@@ -128,6 +134,7 @@ class EtapaConfirmacao {
             // Verifica se os primeiros $cpf_digits dígitos do $input_cpf correspondem aos do $cpf
             if (substr($input_cpf, 0, $cpf_digits) === substr($cpf, 0, $cpf_digits)) {
                 $agi->verbose("Usuário forneceu os primeiros $cpf_digits dígitos corretamente: $input_cpf.");
+                self::etapaConfirmacao_P4_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id);
                 break;
             } else {
                 $agi->verbose("Usuário não forneceu os primeiros $cpf_digits dígitos corretamente.");
@@ -140,51 +147,44 @@ class EtapaConfirmacao {
                 }
             }
         }
-
     }   
 
     private static function etapaConfirmacao_P4_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id) {
-        // Repassar variáveis globais do script para função privada
-        global $imut_audiosDir, $etapa_inicial_cpf2v1, $etapa_inicial_cpf2v2, $digite_novamente;
-
-        $id_protocolo = '0011671213931';
-        $cpf = '11671213920';//cpf so para ter uma ideia
-        $cpf_digits = 3;  // Número de dígitos do CPF que o usuário deve fornecer
-        $max_attempts = 3;  // Máximo de tentativas permitidas
-        // Aqui, assumindo que $id já é um número, podemos usá-lo diretamente
-        $texto = self::numberToWords($id_protocolo);
-        $alawFile = self::mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
-
-        $texto = $imut_audiosDir . $etapa_inicial_cpf2v1;
+        global $digite_novamente, $excedeu_tentativas, $data_aniversario, $imut_audiosDir;
+    
+        $texto = $imut_audiosDir . $data_aniversario;
         $agi->verbose("Texto imutável reproduzido: " . $texto);
         $agi->exec("Playback", $texto);
-        $agi->exec("Playback", $alawFile);
-
-        $texto = $imut_audiosDir . $etapa_inicial_cpf2v2;
-        $agi->verbose("Texto imutável reproduzido: " . $texto);
-        $agi->exec("Playback", $texto);
-        $agi->verbose("Usuário escutou o protocolo e foi solicitado o início dos 3 dígitos do CPF");
-
+        
+        $birth = '18072002'; // Data de aniversário esperada
+        $birth_digits = 4;   // Número de dígitos a serem verificados
+        $max_attempts = 3;   // Número máximo de tentativas
         $attempt = 0;
+    
         while ($attempt < $max_attempts) {
             $attempt++;
-            $agi->verbose("Tentativa $attempt de $max_attempts para fornecer os primeiros $cpf_digits dígitos do CPF.");
+            $agi->verbose("Tentativa $attempt de $max_attempts para fornecer os primeiros $birth_digits dígitos da data de aniversário dia/mês 0000");
+    
             // Captura a entrada do usuário
-            $result = $agi->get_data('beep', 10000, $cpf_digits);
-            $input_cpf = $result['result'];
-            
-            // Verifica se os primeiros $cpf_digits dígitos do $input_cpf correspondem aos do $cpf
-            if (substr($input_cpf, 0, $cpf_digits) === substr($cpf, 0, $cpf_digits)) {
-                $agi->verbose("Usuário forneceu os primeiros $cpf_digits dígitos corretamente: $input_cpf.");
+            $result = $agi->get_data('beep', 10000, $birth_digits);
+            $input_birth = $result['result'];
+    
+            // Comparação dos primeiros $birth_digits dígitos
+            if (substr($input_birth, 0, $birth_digits) === substr($birth, 0, $birth_digits)) {
+                $agi->verbose("Usuário forneceu os primeiros $birth_digits dígitos corretamente: $input_birth.");
                 break;
             } else {
-                $agi->verbose("Usuário não forneceu os primeiros $cpf_digits dígitos corretamente.");
+                $agi->verbose("Usuário não forneceu os primeiros $birth_digits dígitos corretamente.");
                 if ($attempt < $max_attempts) {
-                    $agi->exec("Playback", $imut_audiosDir . $digite_novamente);  // Solicita que o usuário tente novamente
+                    $agi->exec("Playback", $imut_audiosDir . $digite_novamente);  // Solicita que o usuário tente novament
+                } else {
+                    $agi->exec("Playback", $imut_audiosDir . $excedeu_tentativas);
+                    $agi->hangup();
+                    break;
                 }
             }
         }
-    }   
+    }
 
 
     private static function mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter) {
