@@ -51,8 +51,7 @@ function mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter) {
     $outputFile = $ibmWatson->synthesizeAudio($texto, $voice, $id);
     $alawFile = $converter->convertToAlaw($outputFile, $work_dir, $id);
     $agi->verbose("Gerado arquivo de áudio temporário " . $alawFile . " e seu arquivo auxiliar " . $alawFile_aux);
-    
-    return $alawFile; // retorna para remoção na função delAudio
+    return $alawFile;
 }
 
 // Função para enviar dados para API externa
@@ -108,7 +107,7 @@ try {
     $agi->exec("Playback", $imut_audiosDir . $etapa_inicialv1);
     $agi->exec("Playback", $alawFile);
     $agi->exec("Playback", $imut_audiosDir . $etapa_inicialv2);
-    delAudio($alawFile, $agi);
+    //delAudio($alawFile, $agi); Removido pois poderá ser reaproveitado na opcao 2
     
     $max_attempts = 3;
     $attempt = 0;
@@ -122,6 +121,7 @@ try {
             //     'state' => $state
             // );
             // sendToApi($data); // Enviar estado para a API
+            delAudio($alawFile, $agi);
             EtapaConfirmacao::handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id); // Encaminhando para classe de confirmação.
             break;
         } elseif ($dtmf === '2') {
@@ -133,7 +133,7 @@ try {
             // );
             // sendToApi($data); // Enviar estado para a API
             include_once 'etapaNegacao.php'; // Incluir arquivo da etapa de negação
-            EtapaNegacao::handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id); // Encaminhando para classe de negação.
+            EtapaNegacao::handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $cliente, $alawFile); // Encaminhando para classe de negação.
             break;
         } elseif (empty($dtmf)) {
             $agi->verbose("Usuário não respondeu.");

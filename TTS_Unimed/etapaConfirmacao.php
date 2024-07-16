@@ -8,6 +8,11 @@
 
 $imut_audiosDir = '/var/lib/asterisk/agi-bin/TTS_Unimed/imut_audios/';
 
+
+
+$seu_protocolo = 'seu_protocolo.wav';
+/*Seu protocolo é..*/
+
 // Nome de arquivos de áudios imutáveis (sem extensão)
 $digite_novamente = 'digite_novamente.wav';
 /*Desculpe, não consegui confirmar a informação,
@@ -78,36 +83,32 @@ $agradecimento = 'agradecimento.wav';
 
 class EtapaConfirmacao {
     public static function handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id) {
+        $agi->verbose("Usuário digitou '1' para sim.");
         self::etapaConfirmacao_P2_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id);
     }
 
     private static function etapaConfirmacao_P2_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id) {
         // Repassar variáveis globais do script para função privada
-        global $imut_audiosDir, $etapa_inicial_cpf1v1, $ouvir_novamente_1;
+        global $imut_audiosDir, $etapa_inicial_cpf1v1, $ouvir_novamente_1, $seu_protocolo;
         $number = $id;
         $texto = self::numberToWords($number);
         // Gerando número de protocolo
         $alawFile = self::mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
-    
-        $agi->verbose("Usuário digitou '1' para Sim.");
-        
+        $agi->exec("Playback", $imut_audiosDir . $etapa_inicial_cpf1v1);
+        $agi->verbose("Texto imutavel reproduzido: ", $imut_audiosDir . $ouvir_novamente_1);
         // Loop para permitir ouvir novamente
         while (true) {
-            /*@@@@@@
-            Depois mudar aqui para apenas reproduzir o protocolo 
-            @@@@@@*/
-            $texto = $imut_audiosDir . $etapa_inicial_cpf1v1;
-            $agi->verbose("Texto imutavel reproduzido: " . $texto);
-            $agi->exec("Playback", $texto);
             $agi->exec("Playback", $alawFile);
-            $texto = $imut_audiosDir . $ouvir_novamente_1;
-            $agi->verbose("Texto imutavel reproduzido: " . $texto);
-            $agi->exec("Playback", $texto);
+            $agi->verbose("Informado número de protocolo ao usuario: ", $id_protocolo);
+            $agi->verbose("Texto imutavel reproduzido: " .  $imut_audiosDir . $etapa_inicial_cpf1v1);
+            $agi->exec("Playback", $imut_audiosDir . $ouvir_novamente_1);
             // Pede a entrada do usuário
             $result = $agi->get_data('beep', 10000, 1);
             $dtmf = $result['result'];
             if ($dtmf === '1') {
                 $agi->verbose("Usuário digitou '1' para ouvir novamente.");
+                $agi->exec("Playback", $imut_audiosDir . $seu_protocolo);
+                $agi->verbose("Texto imutável reproduzido: ", $imut_audiosDir . $seu_protocolo);
             } else {
                 $agi->verbose("Não respondeu, continuando fluxo.");
                 self::delAudio($alawFile, $agi);
@@ -129,14 +130,12 @@ class EtapaConfirmacao {
         $texto = self::numberToWords($id_assistenciaSaude);
         $alawFile = self::mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
 
-        $texto = $imut_audiosDir . $etapa_inicial_cpf2v1;
-        $agi->verbose("Texto imutável reproduzido: " . $texto);
-        $agi->exec("Playback", $texto);
+        $agi->verbose("Texto imutável reproduzido: ", $imut_audiosDir . $etapa_inicial_cpf2v1);
+        $agi->exec("Playback", $imut_audiosDir . $etapa_inicial_cpf2v1);
         $agi->exec("Playback", $alawFile);
 
-        $texto = $imut_audiosDir . $etapa_inicial_cpf2v2;
-        $agi->verbose("Texto imutável reproduzido: " . $texto);
-        $agi->exec("Playback", $texto);
+        $agi->verbose("Texto imutável reproduzido: ", $imut_audiosDir . $etapa_inicial_cpf2v2);
+        $agi->exec("Playback", $imut_audiosDir . $etapa_inicial_cpf2v2);
         $agi->verbose("Usuário escutou o protocolo e foi solicitado o início dos 3 dígitos do CPF");
         self::delAudio($alawFile, $agi);
 
