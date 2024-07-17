@@ -10,8 +10,7 @@
 require_once 'IBMWatsonTextToSpeech.php'; // Classe para conversão na IBM Watson.
 require_once 'AudioConverter.php'; // Classe para converter o áudio para Alaw.
 require_once '/var/lib/asterisk/agi-bin/phpagi.php'; // Classe AGI.
-require_once '/var/lib/asterisk/agi-bin/TTS_Unimed/apiUnimed/getDados.php'; // Classe para obter dados da API Unimed.
-
+require_once 'etapaConfirmacao.php'; // Classe para etapa de confirmação.
 
 // Paramentros para classe IBMWatson
 $apiKey = "3BSntQGR_4zEjkh6WqOZqIlpe9T6xTi-iuwzJXXb5IDq";
@@ -37,13 +36,9 @@ $work_dir = '/var/lib/asterisk/agi-bin/TTS_Unimed/temp_audios';
 
 // Instanciar classes necessarias
 $agi = new AGI();
-$getDados = new GetDados();
 $ibmWatson = new IBMWatsonTextToSpeech($apiKey, $baseUrl, $work_dir);
 $converter = new AudioConverter();
 
-//receber numero
-$nrTelefone = $agi->request['agi_callerid'];
-$agi->verbose("Número do Caller ID: " . $nrTelefone);
 
 //Funçoes para reaproveitamento de criação de audio.
 function delAudio($alawFile, $agi) {
@@ -59,42 +54,55 @@ function mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter) {
     return $alawFile;
 }
 
+// Função para enviar dados para API externa
+function sendToApi($data, $url = 'http://192.168.100.116:5000/webhook') {
+    $ch = curl_init();
+    
+    // Configuração da requisição cURL
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen(json_encode($data))
+    ));
+
+    // Executa a requisição e obtém a resposta
+    $response = curl_exec($ch);
+    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    
+    // Verifica se houve erro na requisição
+    if(curl_errno($ch)) {
+        $error_message = curl_error($ch);
+        curl_close($ch);
+        throw new Exception('Erro ao enviar requisição para API: ' . $error_message);
+    }
+    
+    // Verifica o código de resposta HTTP
+    if ($httpcode >= 400) {
+        curl_close($ch);
+        throw new Exception('Erro na API: Código ' . $httpcode);
+    }
+    
+    curl_close($ch);
+    
+    return $response;
+}
+
 
 try {
     // Etapa 0: Texto inicial para interação com o usuário
     $cliente = "Lucas";
-    $id = $nrTelefone;
+    $id = "991447700";
     $texto = $cliente;
-
-    // Buscar dados do beneficiário pela API da Unimed
-    $dadosUnimed = $getDados->getData($nrTelefone);
-    // Verificar se há dados retornados e salvar em variáveis separadas
-    if (isset($dadosUnimed['Data'][0])) {
-        $beneficiario = $dadosUnimed['Data'][0];
-        // Salvar cada valor em uma variável separada
-        $nrTelefone = $beneficiario['NR_TELEFONE'];
-        $nrCPF = $beneficiario['NR_CPF'];
-        $dtNascOriginal = $beneficiario['DT_NASC'];
-        $nrProtocolo = $beneficiario['NR_PROTOCOLO'];
-        // Formatando a data de nascimento para o formato desejado
-        $dtNasc = DateTime::createFromFormat('d-M-y', $dtNascOriginal)->format('dmY');
-
-        // Corrigir o ano se for posterior ao ano atual
-        $currentYear = date('Y');
-        $dtNascYear = intval(substr($dtNasc, -4));
-
-        if ($dtNascYear > $currentYear) {
-            $dtNasc = str_replace($dtNascYear, $dtNascYear - 100, $dtNasc);
-        }
-
-        $agi->verbose("Número de Telefone: $nrTelefone");
-        $agi->verbose("Número de CPF: $nrCPF");
-        $agi->verbose("Data de Nascimento: $dtNasc");
-        $agi->verbose("Número de Protocolo: $nrProtocolo");
-    } else {
-        throw new Exception("Não foram encontrados dados válidos na resposta da API da Unimed.");
-    }
-
+    //$state = "chamada_atendida"; // Exemplo de estado para confirmação
+    //$data = array(
+    //    'id' => $id,
+    //    'state' => $state
+    //);
+    //sendToApi($data); // Enviar estado para a API
+    
     $alawFile = mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
     $agi->exec("Playback", $imut_audiosDir . $etapa_inicialv1);
     $agi->exec("Playback", $alawFile);
@@ -108,12 +116,22 @@ try {
         if ($dtmf === '1') {
             include_once 'etapaConfirmacao.php'; // Incluir arquivo da etapa de confirmação
             $state = "cliente_confirmou";
+            // $data = array(
+            //     'id' => $id,
+            //     'state' => $state
+            // );
+            // sendToApi($data); // Enviar estado para a API
             delAudio($alawFile, $agi);
-            EtapaConfirmacao::handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $dtNasc, $nrCPF); // Encaminhando para classe de confirmação.
+            EtapaConfirmacao::handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id); // Encaminhando para classe de confirmação.
             break;
         } elseif ($dtmf === '2') {
             $agi->verbose("Usuário digitou '2' para Não.");
             $state = "cliente_negou";
+            // $data = array(
+            //     'id' => $id,
+            //     'state' => $state
+            // );
+            // sendToApi($data); // Enviar estado para a API
             include_once 'etapaNegacao.php'; // Incluir arquivo da etapa de negação
             EtapaNegacao::handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $cliente, $alawFile); // Encaminhando para classe de negação.
             break;
@@ -132,6 +150,12 @@ try {
     // Verifica se o loop terminou sem resposta válida e avisa
     if ($attempt == $max_attempts) {
         $agi->verbose("Máximo de tentativas atingido sem resposta válida. Avisando API.");
+        // $state = "tentativa_sem_resposta";
+        // $data = array(
+        //     'id' => $id,
+        //     'state' => $state
+        // );
+       //  sendToApi($data); // Enviar estado para a API
     }
 
 } catch (Exception $e) {
