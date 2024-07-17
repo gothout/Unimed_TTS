@@ -1,17 +1,10 @@
 <?php
 
-/**
- * @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
- * @@@@@@@@ Lucas D. @@@@@@@@@@@@
- * @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
- * 
- * Desenvolvido por Lucas D.
- * Contato: lucas.chaves@wonit.com.br.com
- * 
- * @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
- * @@@@@@@@ Lucas D. @@@@@@@@@@@@
- * @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
- */
+/* *********************************************
+ * @Programador: Lucas Daniel Chaves
+ * @Data: 2024-07-11
+ * @Descrição: Rotina responsável por parar, zerar, remover contatos, alimentar contatos por array e iniciar novamente campanha no xcontact.
+ ********************************************* */
 
 // Função para parar uma campanha
 function parar_campanha($api_xc, $token_Xcontact, $campanha_id) {
@@ -227,7 +220,10 @@ $campanha_id = '8'; //ID da campanha que irá ser substituida
 
 //Carregamento de contatos
 $contatos = array(
-    array('TELEFONE' => '991447700', 'NOME' => 'Lucas')
+    array(
+        "DS_NOME" => "JAIMES TARRAGO COIMBRA",
+        "NR_CELULAR" => "47991691958"
+    ),
 );
 
 //Rotina de troca com APIS
