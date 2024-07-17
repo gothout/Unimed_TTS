@@ -82,16 +82,15 @@ $agradecimento = 'agradecimento.wav';
 
 
 class EtapaConfirmacao {
-    public static function handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id) {
+    public static function handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $dtNasc, $nrCPF) {
         $agi->verbose("Usuário digitou '1' para sim.");
-        self::etapaConfirmacao_P2_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id);
+        self::etapaConfirmacao_P2_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $dtNasc, $nrCPF);
     }
 
-    private static function etapaConfirmacao_P2_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id) {
+    private static function etapaConfirmacao_P2_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $dtNasc, $nrCPF) {
         // Repassar variáveis globais do script para função privada
         global $imut_audiosDir, $etapa_inicial_cpf1v1, $ouvir_novamente_1, $seu_protocolo;
-        $number = $id;
-        $texto = self::numberToWords($number);
+        $texto = self::numberToWords($nrProtocolo);
         // Gerando número de protocolo
         $alawFile = self::mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
         $agi->exec("Playback", $imut_audiosDir . $etapa_inicial_cpf1v1);
@@ -99,7 +98,7 @@ class EtapaConfirmacao {
         // Loop para permitir ouvir novamente
         while (true) {
             $agi->exec("Playback", $alawFile);
-            $agi->verbose("Informado número de protocolo ao usuario: ", $id_protocolo);
+            $agi->verbose("Informado número de protocolo ao usuario: ", $nrProtocolo);
             $agi->verbose("Texto imutavel reproduzido: " .  $imut_audiosDir . $etapa_inicial_cpf1v1);
             $agi->exec("Playback", $imut_audiosDir . $ouvir_novamente_1);
             // Pede a entrada do usuário
@@ -112,22 +111,20 @@ class EtapaConfirmacao {
             } else {
                 $agi->verbose("Não respondeu, continuando fluxo.");
                 self::delAudio($alawFile, $agi);
-                self::etapaConfirmacao_P3_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $digite_novamente, $excedeu_tentativas);
+                $agi->verbose("Parâmetros recebidos em etapaConfirmacao_P2_audio: nrProtocolo = $nrProtocolo, dtNasc = $dtNasc, nrCPF = $nrCPF");
+                self::etapaConfirmacao_P3_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $digite_novamente, $excedeu_tentativas, $nrProtocolo, $dtNasc, $nrCPF);
                 break;
             }
         }
     }
 
-    private static function etapaConfirmacao_P3_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id) {
+    private static function etapaConfirmacao_P3_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $dtNasc, $nrCPF) {
         // Repassar variáveis globais do script para função privada
-        global $imut_audiosDir, $etapa_inicial_cpf2v1, $etapa_inicial_cpf2v2, $digite_novamente, $excedeu_tentativas;
-
-        $id_assistenciaSaude = '0011671213931';
-        $cpf = '11671213920';//cpf so para ter uma ideia
-        $cpf_digits = 3;  // Número de dígitos do CPF que o usuário deve fornecer
+        global $imut_audiosDir, $etapa_inicial_cpf2v1, $etapa_inicial_cpf2v2, $digite_novamente, $excedeu_tentativas, $nrProtocolo, $dtNasc, $nrCPF;
+        $nrCPF_digits = 3;  // Número de dígitos do CPF que o usuário deve fornecer
         $max_attempts = 3;  // Máximo de tentativas permitidas
-        // Aqui, assumindo que $id já é um número, podemos usá-lo diretamente
-        $texto = self::numberToWords($id_assistenciaSaude);
+        $agi->verbose("Parâmetros recebidos em etapaConfirmacao_P3_audio: nrProtocolo = $nrProtocolo, dtNasc = $dtNasc, nrCPF = $nrCPF");
+        $texto = self::numberToWords($nrProtocolo);
         $alawFile = self::mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
 
         $agi->verbose("Texto imutável reproduzido: ", $imut_audiosDir . $etapa_inicial_cpf2v1);
@@ -142,19 +139,19 @@ class EtapaConfirmacao {
         $attempt = 0;
         while ($attempt < $max_attempts) {
             $attempt++;
-            $agi->verbose("Tentativa $attempt de $max_attempts para fornecer os primeiros $cpf_digits dígitos do CPF.");
+            $agi->verbose("Tentativa $attempt de $max_attempts para fornecer os primeiros $nrCPF_digits dígitos do CPF.");
             
             // Captura a entrada do usuário
-            $result = $agi->get_data('beep', 10000, $cpf_digits);
+            $result = $agi->get_data('beep', 10000, $nrCPF_digits);
             $input_cpf = $result['result'];
             
-            // Verifica se os primeiros $cpf_digits dígitos do $input_cpf correspondem aos do $cpf
-            if (substr($input_cpf, 0, $cpf_digits) === substr($cpf, 0, $cpf_digits)) {
-                $agi->verbose("Usuário forneceu os primeiros $cpf_digits dígitos corretamente: $input_cpf.");
+            // Verifica se os primeiros $nrCPF_digits dígitos do $input_cpf correspondem aos do $nrCPF
+            if (substr($input_cpf, 0, $nrCPF_digits) === substr($nrCPF, 0, $nrCPF_digits)) {
+                $agi->verbose("Usuário forneceu os primeiros $nrCPF_digits dígitos corretamente: $input_cpf.");
                 self::etapaConfirmacao_P4_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id);
                 break;
             } else {
-                $agi->verbose("Usuário não forneceu os primeiros $cpf_digits dígitos corretamente.");
+                $agi->verbose("Usuário não forneceu os primeiros $nrCPF_digits dígitos corretamente.");
                 if ($attempt < $max_attempts) {
                     $agi->exec("Playback", $imut_audiosDir . $digite_novamente);  // Solicita que o usuário tente novamente
                 } else {
