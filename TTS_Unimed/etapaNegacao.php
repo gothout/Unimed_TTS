@@ -6,6 +6,12 @@
  * @Descrição: Classe responsável pela Etapa de negacao, fluxo.
   ********************************************* */
 
+
+
+require_once '/var/lib/asterisk/agi-bin/TTS_Unimed/apiUnimed/putUnimed.php'; //envio de put para api da Unimed
+$putUnimedAPI = new PutUnimed();
+
+$nrEtapa = "2";
 $imut_audiosDir = '/var/lib/asterisk/agi-bin/TTS_Unimed/imut_audios/';
 
 // Nome de arquivos de áudios imutáveis (sem extensão)
@@ -92,30 +98,34 @@ $mensagem_final_negacao = 'mensagem_final_negacao.wav';
 
 
 class EtapaNegacao {
-    public static function handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $cliente, $alawFile) {
-      $agi->verbose("Usuário digitou '2' para não.");
-        self::etapaNegacao_P2_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $cliente, $alawFile);
+    public static function handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $cliente, $alawFile, $nrProtocolo) {
+        global $nrEtapa, $putUnimedAPI;
+        $agi->verbose("Usuário digitou '2' para não.");
+        //Estagio 0 (Destino confirmou não ser o cliente)
+        $response = $putUnimedAPI->sendRequest($nrProtocolo, $nrEtapa, '0');
+        self::etapaNegacao_P2_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $cliente, $alawFile, $nrProtocolo);
     }
 
-    private static function etapaNegacao_P2_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $cliente, $alawFile) {
+    private static function etapaNegacao_P2_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $cliente, $alawFile, $nrProtocolo) {
         // Repassar variáveis globais do script para função privada
-        global $imut_audiosDir, $quest_voceconhecev1, $quest_voceconhecev2, $digite_novamente, $atualiza_cadastro;
+        global $imut_audiosDir, $quest_voceconhecev1, $quest_voceconhecev2, $digite_novamente, $atualiza_cadastro, $nrProtocolo, $nrEtapa, $putUnimedAPI;
         // Gerando número de protocolo
         //$alawFile = self::mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
         $agi->exec("Playback", $imut_audiosDir . $quest_voceconhecev1);
         $agi->exec("Playback", $alawFile);
         self::delAudio($alawFile, $agi);
         $agi->exec("Playback", $imut_audiosDir . $quest_voceconhecev2);
-        $agi->verbose("Solicitado ao usuario se conhece " . $cliente);
-
         $max_attempts = 5;
         $attempt = 0;
         while ($attempt < $max_attempts) {
             $dtmf = $agi->get_data('beep', 10000, 1)['result']; // Captura a entrada do usuário
             if ($dtmf === '1') {
+                $agi->verbose("Solicitado ao usuario se conhece " . $cliente);
                 self::etapaNegacao_P3_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $cliente);
                 break;
             } elseif ($dtmf === '2') {
+                $response = $putUnimedAPI->sendRequest($nrProtocolo, $nrEtapa, '1');
+                $agi->verbose("Solicitado ao usuario se conhece " . $cliente);
                 $agi->exec("Playback", $imut_audiosDir . $atualiza_cadastro);
                 $agi->hangup();
                 //Implementar aqui codigo para atualizar base
@@ -133,14 +143,16 @@ class EtapaNegacao {
             $attempt++;
         }
         if ($attempt == $max_attempts) {
-          $agi->verbose("Máximo de tentativas atingido sem resposta válida. Avisando API.");
+          $agi->verbose("Máximo de tentativas atingido sem resposta válida.");
           $agi->hangup();
       }
     }
 
     private static function etapaNegacao_P3_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id) {
         // Repassar variáveis globais do script para função privada
-        global $imut_audiosDir, $etapa_inicial_cpf1v1, $digite_novamente, $excedeu_tentativas,$ouvir_novamente_1, $seu_protocolo;
+        global $imut_audiosDir, $etapa_inicial_cpf1v1, $digite_novamente, $excedeu_tentativas,$ouvir_novamente_1, $seu_protocolo, $nrProtocolo, $nrEtapa, $putUnimedAPI;
+        //Estagio 2 (Destino informou que conhece o cliente)
+        $response = $putUnimedAPI->sendRequest($nrProtocolo, $nrEtapa, '2');
 
         $id_protocolo = '0011671213931';
         $texto = self::numberToWords($id_protocolo);
@@ -153,6 +165,11 @@ class EtapaNegacao {
         while (true) {
           $agi->exec("Playback", $alawFile);
           $agi->verbose("Informado número de protocolo ao usuario: ", $id_protocolo);
+
+          //Estagio 3  (Destino escutou número de protocolo)
+          $response = $putUnimedAPI->sendRequest($nrProtocolo, $nrEtapa, '3');
+
+
           $agi->exec("Playback", $imut_audiosDir . $ouvir_novamente_1);
           $agi->verbose("Texto imutavel reproduzido: ", $imut_audiosDir . $ouvir_novamente_1);
           // Pede a entrada do usuário
@@ -173,9 +190,11 @@ class EtapaNegacao {
 
     private static function etapaNegacao_P4_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $excedeu_tentativas, $digite_novamente) {
       // Repassar variáveis globais do script para função privada
-      global $imut_audiosDir, $etapa_inicial_cpf1v1, $digite_novamente, $excedeu_tentativas,$ouvir_novamente_1, $mensagem_final_negacao, $agradecimento;
+      global $imut_audiosDir, $etapa_inicial_cpf1v1, $digite_novamente, $excedeu_tentativas,$ouvir_novamente_1, $mensagem_final_negacao, $agradecimento, $putUnimedAPI, $nrProtocolo, $nrEtapa;
       // Loop para permitir ouvir novamente
       while (true) {
+        //Estagio 4  (Destino escutou número de protocolo)
+        $response = $putUnimedAPI->sendRequest($nrProtocolo, $nrEtapa, '4');
         $agi->exec("Playback", $imut_audiosDir . $mensagem_final_negacao);
         $agi->verbose("Texto imutável reproduzido: ", $imut_audiosDir . $mensagem_final_negacao);  
         // Pede a entrada do usuário
