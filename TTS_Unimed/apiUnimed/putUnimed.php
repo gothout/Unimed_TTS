@@ -2,7 +2,7 @@
 class PutUnimed
 {
     //private $url = 'https://ords-homol.unimedblumenau.com.br/ords/app/api/Telefonica/retorna_estagio_ligacao';
-    private $url = 'http://192.168.100.116:5000/ords/app/api/Telefonica/retorna_estagio_ligacao';
+    private $url = 'http://192.168.100.53:5000/ords/app/api/Telefonica/retorna_estagio_ligacao';
     private $authHeader = 'Basic c2lnbWFjb21fdXJhOktxbzVkZUlsMFk=';
 
     public function sendRequest($nrProtocolo, $nrEtapa, $nrEstagio)
@@ -26,25 +26,18 @@ class PutUnimed
             'Authorization: ' . $this->authHeader
         ));
 
-        // Executar a requisição
-        $response = curl_exec($ch);
+        // Executar a requisição de forma assíncrona
+        $mh = curl_multi_init();
+        curl_multi_add_handle($mh, $ch);
 
-        // Verificar se houve algum erro
-        if (curl_errno($ch)) {
-            throw new Exception('Erro na requisição: ' . curl_error($ch));
-        }
-
-        // Verificar o código de resposta HTTP
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if ($httpCode !== 200) {
-            throw new Exception('Erro na requisição, código HTTP: ' . $httpCode);
-        }
+        $running = null;
+        do {
+            curl_multi_exec($mh, $running);
+        } while ($running > 0);
 
         // Fechar a sessão cURL
-        curl_close($ch);
-
-        // Retornar a resposta
-        return $response;
+        curl_multi_remove_handle($mh, $ch);
+        curl_multi_close($mh);
     }
 }
 ?>
