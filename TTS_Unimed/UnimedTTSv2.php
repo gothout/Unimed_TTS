@@ -71,7 +71,7 @@ try {
     
     $nrCPF = "11671213920";
     $nrCNPJ = "81385593000153";
-    $idDocumento = $nrCPF;
+    $idDocumento = $nrCNPJ;
     if (strlen($idDocumento) > 11) {
         // Fluxo normal para CNPJ
         $agi->verbose("Seguindo fluxo de CNPJ para: $nrTelefone");
