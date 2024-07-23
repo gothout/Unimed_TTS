@@ -135,11 +135,11 @@ class EtapaConfirmacao_CNPJ {
 
     private static function etapaConfirmacao_P3_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $idDocumento) {
         // Repassar variáveis globais do script para função privada
-        global $imut_audiosDir, $etapa_inicial_cpf2v1, $etapa_inicial_cnpj2v2, $digite_novamente, $excedeu_tentativas, $idDocumento, $nrProtocolo, $nrEtapa, $putUnimedAPI;
+        global $imut_audiosDir, $etapa_inicial_cpf2v1, $etapa_inicial_cnpj2v2, $digite_novamente, $excedeu_tentativas, $idDocumento, $nrProtocolo, $nrEtapa, $putUnimedAPI, $nrCarteirinha;
         $cnpj_digits = 3;  // Número de dígitos do CPF que o usuário deve fornecer
         $max_attempts = 3;  // Máximo de tentativas permitidas
 
-        $texto = self::numberToWords($nrProtocolo);
+        $texto = self::numberToWords($nrCarteirinha);
         $alawFile = self::mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
 
         $agi->verbose("Texto imutável reproduzido: ", $imut_audiosDir . $etapa_inicial_cpf2v1);
