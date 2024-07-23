@@ -6,6 +6,10 @@
  * @Descrição: Classe responsável pela Etapa de confirmaçao, fluxo.
  ********************************************* */
 
+require_once '/var/lib/asterisk/agi-bin/TTS_Unimed/apiUnimed/putUnimed.php'; //envio de put para api da Unimed
+$putUnimedAPI = new PutUnimed();
+
+$nrEtapa = "1";
 $imut_audiosDir = '/var/lib/asterisk/agi-bin/TTS_Unimed/imut_audios/';
 
 
@@ -82,14 +86,17 @@ $agradecimento = 'agradecimento.wav';
 
 
 class EtapaConfirmacao {
-    public static function handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $dtNasc, $nrCPF) {
+    public static function handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $dtNasc, $idDocumento, $nrCarteirinha) {
+        global $nrEtapa, $putUnimedAPI;
         $agi->verbose("Usuário digitou '1' para sim.");
-        self::etapaConfirmacao_P2_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $dtNasc, $nrCPF);
+        //Estagio 0 (Cliente confirmou ser ele)
+        $response = $putUnimedAPI->sendRequest($nrProtocolo, $nrEtapa, '0');
+        self::etapaConfirmacao_P2_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $dtNasc, $idDocumento, $nrCarteirinha);
     }
 
-    private static function etapaConfirmacao_P2_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $dtNasc, $nrCPF) {
+    private static function etapaConfirmacao_P2_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $dtNasc, $idDocumento) {
         // Repassar variáveis globais do script para função privada
-        global $imut_audiosDir, $etapa_inicial_cpf1v1, $ouvir_novamente_1, $seu_protocolo;
+        global $imut_audiosDir, $etapa_inicial_cpf1v1, $ouvir_novamente_1, $seu_protocolo, $nrEtapa, $putUnimedAPI;
         $texto = self::numberToWords($nrProtocolo);
         // Gerando número de protocolo
         $alawFile = self::mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
@@ -98,6 +105,8 @@ class EtapaConfirmacao {
         // Loop para permitir ouvir novamente
         while (true) {
             $agi->exec("Playback", $alawFile);
+            //Estagio 1 (Cliente escutou protocolo)
+            $response = $putUnimedAPI->sendRequest($nrProtocolo, $nrEtapa, '1');
             $agi->verbose("Informado número de protocolo ao usuario: ", $nrProtocolo);
             $agi->verbose("Texto imutavel reproduzido: " .  $imut_audiosDir . $etapa_inicial_cpf1v1);
             $agi->exec("Playback", $imut_audiosDir . $ouvir_novamente_1);
@@ -111,20 +120,20 @@ class EtapaConfirmacao {
             } else {
                 $agi->verbose("Não respondeu, continuando fluxo.");
                 self::delAudio($alawFile, $agi);
-                $agi->verbose("Parâmetros recebidos em etapaConfirmacao_P2_audio: nrProtocolo = $nrProtocolo, dtNasc = $dtNasc, nrCPF = $nrCPF");
-                self::etapaConfirmacao_P3_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $digite_novamente, $excedeu_tentativas, $nrProtocolo, $dtNasc, $nrCPF);
+                $agi->verbose("Parâmetros recebidos em etapaConfirmacao_P2_audio: nrProtocolo = $nrProtocolo, dtNasc = $dtNasc, idDocumento = $idDocumento");
+                self::etapaConfirmacao_P3_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $digite_novamente, $excedeu_tentativas, $nrProtocolo, $dtNasc, $idDocumento);
                 break;
             }
         }
     }
 
-    private static function etapaConfirmacao_P3_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $dtNasc, $nrCPF) {
+    private static function etapaConfirmacao_P3_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $dtNasc, $idDocumento) {
         // Repassar variáveis globais do script para função privada
-        global $imut_audiosDir, $etapa_inicial_cpf2v1, $etapa_inicial_cpf2v2, $digite_novamente, $excedeu_tentativas, $nrProtocolo, $dtNasc, $nrCPF;
-        $nrCPF_digits = 3;  // Número de dígitos do CPF que o usuário deve fornecer
+        global $imut_audiosDir, $etapa_inicial_cpf2v1, $etapa_inicial_cpf2v2, $digite_novamente, $excedeu_tentativas, $nrProtocolo, $dtNasc, $idDocumento, $nrEtapa, $putUnimedAPI, $nrCarteirinha;
+        $idDocumento_digits = 3;  // Número de dígitos do CPF que o usuário deve fornecer
         $max_attempts = 3;  // Máximo de tentativas permitidas
-        $agi->verbose("Parâmetros recebidos em etapaConfirmacao_P3_audio: nrProtocolo = $nrProtocolo, dtNasc = $dtNasc, nrCPF = $nrCPF");
-        $texto = self::numberToWords($nrProtocolo);
+        $agi->verbose("Parâmetros recebidos em etapaConfirmacao_P3_audio: nrCarteirinha = $nrCarteirinha, dtNasc = $dtNasc, idDocumento = $idDocumento");
+        $texto = self::numberToWords($nrCarteirinha);
         $alawFile = self::mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
 
         $agi->verbose("Texto imutável reproduzido: ", $imut_audiosDir . $etapa_inicial_cpf2v1);
@@ -134,27 +143,31 @@ class EtapaConfirmacao {
         $agi->verbose("Texto imutável reproduzido: ", $imut_audiosDir . $etapa_inicial_cpf2v2);
         $agi->exec("Playback", $imut_audiosDir . $etapa_inicial_cpf2v2);
         $agi->verbose("Usuário escutou o protocolo e foi solicitado o início dos 3 dígitos do CPF");
+        //Estagio 2 (Solicitado ao cliente os três primeiros digitos de seu CPF/CNPJ)
+        $response = $putUnimedAPI->sendRequest($nrProtocolo, $nrEtapa, '2');
         self::delAudio($alawFile, $agi);
 
         $attempt = 0;
         while ($attempt < $max_attempts) {
             $attempt++;
-            $agi->verbose("Tentativa $attempt de $max_attempts para fornecer os primeiros $nrCPF_digits dígitos do CPF.");
+            $agi->verbose("Tentativa $attempt de $max_attempts para fornecer os primeiros $idDocumento_digits dígitos do CPF.");
             
             // Captura a entrada do usuário
-            $result = $agi->get_data('beep', 10000, $nrCPF_digits);
+            $result = $agi->get_data('beep', 10000, $idDocumento_digits);
             $input_cpf = $result['result'];
             
-            // Verifica se os primeiros $nrCPF_digits dígitos do $input_cpf correspondem aos do $nrCPF
-            if (substr($input_cpf, 0, $nrCPF_digits) === substr($nrCPF, 0, $nrCPF_digits)) {
-                $agi->verbose("Usuário forneceu os primeiros $nrCPF_digits dígitos corretamente: $input_cpf.");
+            // Verifica se os primeiros $idDocumento_digits dígitos do $input_cpf correspondem aos do $idDocumento
+            if (substr($input_cpf, 0, $idDocumento_digits) === substr($idDocumento, 0, $idDocumento_digits)) {
+                $agi->verbose("Usuário forneceu os primeiros $idDocumento_digits dígitos corretamente: $input_cpf.");
                 self::etapaConfirmacao_P4_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id);
                 break;
             } else {
-                $agi->verbose("Usuário não forneceu os primeiros $nrCPF_digits dígitos corretamente.");
+                $agi->verbose("Usuário não forneceu os primeiros $idDocumento_digits dígitos corretamente.");
                 if ($attempt < $max_attempts) {
                     $agi->exec("Playback", $imut_audiosDir . $digite_novamente);  // Solicita que o usuário tente novamente
                 } else {
+                    //Estagio 3 (Cliente errou suas 3 tentativas de CPF/CNPJ))
+                    $response = $putUnimedAPI->sendRequest($nrProtocolo, $nrEtapa, '3');
                     $agi->exec("Playback", $imut_audiosDir . $excedeu_tentativas);
                     $agi->hangup();
                     break;
@@ -164,13 +177,14 @@ class EtapaConfirmacao {
     }   
 
     private static function etapaConfirmacao_P4_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id) {
-        global $digite_novamente, $excedeu_tentativas, $data_aniversario, $imut_audiosDir;
-    
-        $texto = $imut_audiosDir . $data_aniversario;
-        $agi->verbose("Texto imutável reproduzido: " . $texto);
-        $agi->exec("Playback", $texto);
-        
-        $birth = '18072002'; // Data de aniversário esperada
+        global $digite_novamente, $excedeu_tentativas, $data_aniversario, $imut_audiosDir, $nrProtocolo, $nrEtapa, $putUnimedAPI, $dtNasc;
+
+        $agi->verbose("Texto imutável reproduzido: " . $imut_audiosDir . $data_aniversario);
+        $agi->exec("Playback", $imut_audiosDir . $data_aniversario);
+        //Estagio 4 (Cliente acertou seus três primeiros digitos de seu CPF e foi solicitado seus 4 primeiros digitos de sua data de aniversário)
+        $response = $putUnimedAPI->sendRequest($nrProtocolo, $nrEtapa, '4');
+
+        $birth = $dtNasc; // Data de aniversário esperada
         $birth_digits = 4;   // Número de dígitos a serem verificados
         $max_attempts = 3;   // Número máximo de tentativas
         $attempt = 0;
@@ -182,7 +196,7 @@ class EtapaConfirmacao {
             // Captura a entrada do usuário
             $result = $agi->get_data('beep', 10000, $birth_digits);
             $input_birth = $result['result'];
-    
+
             // Comparação dos primeiros $birth_digits dígitos
             if (substr($input_birth, 0, $birth_digits) === substr($birth, 0, $birth_digits)) {
                 $agi->verbose("Usuário forneceu os primeiros $birth_digits dígitos corretamente: $input_birth.");
@@ -193,6 +207,8 @@ class EtapaConfirmacao {
                 if ($attempt < $max_attempts) {
                     $agi->exec("Playback", $imut_audiosDir . $digite_novamente);  // Solicita que o usuário tente novament
                 } else {
+                    //Estagio 5 (Cliente errou suas três tentativas de acerto em sua data de aniversário)
+                    $response = $putUnimedAPI->sendRequest($nrProtocolo, $nrEtapa, '5');
                     $agi->exec("Playback", $imut_audiosDir . $excedeu_tentativas);
                     $agi->hangup();
                     break;
@@ -202,8 +218,9 @@ class EtapaConfirmacao {
     }
 
     private static function etapaConfirmacao_P5_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id) {
-        global $imut_audiosDir, $mensagem_finalv1, $mensagem_finalv2, $mensagem_finalv3, $mensagem_finalv4, $mensagem_finalv5, $mensagem_finalv6, $agradecimento;
-    
+        global $imut_audiosDir, $mensagem_finalv1, $mensagem_finalv2, $mensagem_finalv3, $mensagem_finalv4, $mensagem_finalv5, $mensagem_finalv6, $agradecimento, $nrProtocolo, $nrEtapa, $putUnimedAPI;
+        //Estagio 6 (Cliente acertou sua data de aniversário, redirecionado ao aúdio final de suas faturas)
+        $response = $putUnimedAPI->sendRequest($nrProtocolo, $nrEtapa, '6');
         $data_vencida = "18 de Julho de 2002";
         $valor_atraso = "1200 reais e 20 centavos";
         $numero_titulo = '11671213920';
@@ -296,7 +313,12 @@ class EtapaConfirmacao {
     
         $agi->verbose("Texto imutável reproduzido: " . $imut_audiosDir . $mensagem_finalv6);
         $agi->exec("Playback", $imut_audiosDir . $mensagem_finalv6);
+
+
+
         $agi->verbose("Texto imutável reproduzido: " . $imut_audiosDir . $agradecimento);
+        //Estagio 7 (Cliente chegou até o final e escutou tudo)
+        $response = $putUnimedAPI->sendRequest($nrProtocolo, $nrEtapa, '7');
         $agi->exec("Playback", $imut_audiosDir . $agradecimento);
         $agi->hangup();
     }    
