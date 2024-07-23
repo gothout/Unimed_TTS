@@ -94,14 +94,14 @@ $agradecimento = 'agradecimento.wav';
 
 
 class EtapaConfirmacao_CNPJ {
-    public static function handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $nrCNPJ) {
+    public static function handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $idDocumento) {
         global $nrEtapa, $putUnimedAPI;
         $agi->verbose("Usuário digitou '1' para sim.");
         $response = $putUnimedAPI->sendRequest($nrProtocolo, $nrEtapa, '0');
-        self::etapaConfirmacao_P2_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $nrCNPJ);
+        self::etapaConfirmacao_P2_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $idDocumento);
     }
 
-    private static function etapaConfirmacao_P2_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $nrCNPJ) {
+    private static function etapaConfirmacao_P2_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $idDocumento) {
         // Repassar variáveis globais do script para função privada
         global $imut_audiosDir, $etapa_inicial_cpf1v1, $ouvir_novamente_1, $seu_protocolo, $nrEtapa, $putUnimedAPI;
         $texto = self::numberToWords($nrProtocolo);
@@ -133,9 +133,9 @@ class EtapaConfirmacao_CNPJ {
         }
     }
 
-    private static function etapaConfirmacao_P3_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $nrCNPJ) {
+    private static function etapaConfirmacao_P3_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $idDocumento) {
         // Repassar variáveis globais do script para função privada
-        global $imut_audiosDir, $etapa_inicial_cpf2v1, $etapa_inicial_cnpj2v2, $digite_novamente, $excedeu_tentativas, $nrCNPJ, $nrProtocolo, $nrEtapa, $putUnimedAPI;
+        global $imut_audiosDir, $etapa_inicial_cpf2v1, $etapa_inicial_cnpj2v2, $digite_novamente, $excedeu_tentativas, $idDocumento, $nrProtocolo, $nrEtapa, $putUnimedAPI;
         $cnpj_digits = 3;  // Número de dígitos do CPF que o usuário deve fornecer
         $max_attempts = 3;  // Máximo de tentativas permitidas
 
@@ -163,7 +163,7 @@ class EtapaConfirmacao_CNPJ {
             $input_cnpj = $result['result'];
             
             // Verifica se os primeiros $cnpj_digits dígitos do $input_cpf correspondem aos do $cpf
-            if (substr($input_cnpj, 0, $cnpj_digits) === substr($nrCNPJ, 0, $cnpj_digits)) {
+            if (substr($input_cnpj, 0, $cnpj_digits) === substr($idDocumento, 0, $cnpj_digits)) {
                 $agi->verbose("Usuário forneceu os primeiros $cnpj_digits dígitos corretamente: $input_cnpj.");
                 self::etapaConfirmacao_P4_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id);
                 break;
