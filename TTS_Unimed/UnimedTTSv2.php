@@ -157,7 +157,7 @@ try {
             } elseif ($dtmf === '2') {
                 $agi->verbose("Usuário digitou '2' para Não.");
                 include_once 'etapaNegacao.php'; // Incluir arquivo da etapa de negação
-                EtapaNegacao::handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $cliente, $alawFile, $nrProtocolo, $nrCarteirinha); // Encaminhando para classe de negação.
+                EtapaNegacao::handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $cliente, $alawFile, $nrProtocolo); // Encaminhando para classe de negação.
                 break;
             } elseif (empty($dtmf)) {
                 $agi->verbose("Usuário não respondeu.");
