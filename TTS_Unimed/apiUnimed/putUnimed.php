@@ -2,7 +2,7 @@
 class PutUnimed
 {
     //private $url = 'https://ords-homol.unimedblumenau.com.br/ords/app/api/Telefonica/retorna_estagio_ligacao';
-    private $url = 'http://192.168.100.53:5000/ords/app/api/Telefonica/retorna_estagio_ligacao';
+    private $url = 'http://localhost:5000/ords/app/api/Telefonica/retorna_estagio_ligacao';
     private $authHeader = 'Basic c2lnbWFjb21fdXJhOktxbzVkZUlsMFk=';
 
     public function sendRequest($nrProtocolo, $nrEtapa, $nrEstagio)

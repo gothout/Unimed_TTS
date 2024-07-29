@@ -4,18 +4,18 @@
 // Classe para integração com a API da Unimed Blumenau para obter dados do beneficiário
 class GetDados {
     private $baseUrl = 'https://ords-homol.unimedblumenau.com.br/ords/app/api/Telefonica/obter_dados_beneficiario';
-    private $authToken = 'Authorization: Basic c2lnbWFjb21fdXJhOktxbzVkZUlsMFk=';
+    private $authToken = 'Basic c2lnbWFjb21fdXJhOktxbzVkZUlsMFk=';
 
     // Método para buscar dados do beneficiário pelo número de telefone
-    public function getData($nrTelefone) {
-        $url = $this->baseUrl . '?nrTelefone=' . urlencode($nrTelefone);
+    public function getData($nrTelefone, $cliente) {
+        $url = $this->baseUrl . '?nrTelefone=' . urlencode($nrTelefone) . '&dsNome=' . urlencode($cliente);
         
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',
-            $this->authToken
+            'Authorization: ' . $this->authToken
         ));
         
         $response = curl_exec($ch);
@@ -31,7 +31,13 @@ class GetDados {
             throw new Exception('Erro na API da Unimed: Código ' . $httpcode);
         }
         
-        return json_decode($response, true);
+        $data = json_decode($response, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new Exception('Erro ao decodificar a resposta JSON: ' . json_last_error_msg());
+        }
+        
+        return $data;
     }
 }
 ?>
