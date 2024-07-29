@@ -220,30 +220,31 @@ if(curl_errno($ch)) {
     $error_message = curl_error($ch);
     // Log do erro
     log_campanha("Erro na requisição cURL: {$error_message}");
+} else {
+    // Obtém o código de resposta HTTP
+    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    // Log do código de resposta da API Unimed
+    log_campanha("Resposta API Unimed: HTTP {$httpcode}");
+
+    // Decodifica a resposta JSON
+    $contatos_unimed = json_decode($response, true);
+
+    // Verifica se houve erro na decodificação JSON
+    if ($contatos_unimed === null) {
+        // Log do erro
+        log_campanha("Erro ao decodificar resposta JSON da API Unimed.");
+    }
 }
 
 // Fecha a sessão cURL
 curl_close($ch);
-
-// Decodifica a resposta JSON
-$contatos_unimed = json_decode($response, true);
-
-// Verifica se houve erro na decodificação JSON
-if ($contatos_unimed === null) {
-    // Log do erro
-    log_campanha("Erro ao decodificar resposta JSON da API Unimed.");
-}
-
-// Log do código de resposta da API Unimed
-$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-log_campanha("Resposta API Unimed: HTTP {$httpcode}");
 
 if (isset($contatos_unimed['Data'])) {
     $contatos = $contatos_unimed['Data'];
     log_campanha("Total de contatos obtidos: " . count($contatos));
 
     // IDs da campanha e tokens de autenticação (substituir pelos valores reais)
-    $campanha_id = 8;
+    $campanha_id = 5;
     $api_xc = 'http://localhost:8001/api/v3/campanha';
     $api_xc_v2 = 'http://localhost:8001/api/v2/campanha'; // API funcional para criar campanha baseado em argumento json
     $token_Xcontact = '1e5a475b7421c20cf0edb60543b20d406a2e55fd2619f5f04ee10dbdc41a007b';
