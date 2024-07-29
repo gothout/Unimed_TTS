@@ -61,7 +61,7 @@ function mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter) {
 try {
     $cliente = $nomeFetcher->getNomeCliente($nrTelefone);
     $agi->verbose("Nome do cliente: " . $cliente);
-
+    $agi->verbose("Buscando dados concretos para " . $cliente);
     $data = $getDados->getData($nrTelefone, $cliente);
 
     if (!is_array($data)) {
@@ -73,6 +73,7 @@ try {
     $dtNasc = isset($clienteData['DT_NASC']) ? date("dmY", strtotime($clienteData['DT_NASC'])) : '';
     $nrProtocolo = isset($clienteData['NR_PROTOCOLO']) ? $clienteData['NR_PROTOCOLO'] : '';
     $nrCarteirinha = isset($clienteData['NR_CARTEIRINHA']) ? str_replace(['.', '-'], '', $clienteData['NR_CARTEIRINHA']) : '';
+    $prazoPagto = isset($clienteData['PRAZO_PAGTO']) ? $clienteData['PRAZO_PAGTO'] : 'Não disponível';
     $qtdFaturas = count($data['Data']) - 1;
 
     $agi->verbose("ID Documento (CPF ou CNPJ): " . $idDocumento);
@@ -80,6 +81,7 @@ try {
     $agi->verbose("NR_PROTOCOLO: " . $nrProtocolo);
     $agi->verbose("NR_CARTEIRINHA: " . $nrCarteirinha);
     $agi->verbose("QTD_FATURAS: " . $qtdFaturas);
+    $agi->verbose("PRAZO_PAGTO: " . $prazoPagto);
 
     $nrTitulo = [];
     $nrSaldoTitulo = [];
