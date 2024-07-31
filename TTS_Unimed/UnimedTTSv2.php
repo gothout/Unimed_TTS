@@ -154,7 +154,7 @@ try {
             if ($dtmf === '1') {
                 include_once 'etapaConfirmacao.php'; // Incluir arquivo da etapa de confirmação
                 delAudio($alawFile, $agi);
-                EtapaConfirmacao::handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $dtNasc, $idDocumento, $nrCarteirinha); // Encaminhando para classe de confirmação.
+                EtapaConfirmacao::handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $dtNasc, $idDocumento, $nrCarteirinha, $nrTitulo, $nrSaldoTitulo, $nrDiasAtraso, $qtdFaturas, $prazoPagto); // Encaminhando para classe de confirmação.
                 break;
             } elseif ($dtmf === '2') {
                 $agi->verbose("Usuário digitou '2' para Não.");

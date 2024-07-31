@@ -63,32 +63,51 @@ números do seu CPF
 */
 
 //Mensagens finais
-$mensagem_finalv1 = 'mensagem_finalv1.wav';
-/*Estou ligando, porque identificamos valores em aberto com o vencimento em..*/
+$mensagemFinal2_v1 = 'mensagemFinal2_v1.wav';
+/*Estou ligando, pois identificamos*/
 
-$mensagem_finalv2 = 'mensagem_finalv2.wav';
-/*no valor de.. */
+$mensagemFinal2_v2 = 'mensagemFinal2_v2.wav';
+/*valores em abertos:*/
 
-$mensagem_finalv3 = 'mensagem_finalv3.wav';
-/*título número..*/
+$mensagemFinal2_v3 = 'mensagemFinal2_v3.wav';
+/*O vencimento de seu */
 
-$mensagem_finalv4 = 'mensagem_finalv4.wav'; 
-/*esta fatura está em atraso a..*/
+$mensagemFinal2_v4 = 'mensagemFinal2_v4.wav'; 
+/*valor em aberto é em */
 
-$mensagem_finalv5 = 'mensagem_finalv5.wav';
-/*Falar a mesma coisa sobre as demais faturas em aberto caso tenha. Informamos que o prazo para pagamento a fim de evitar o cancelamento é até..*/
+$mensagemFinal2_v5 = 'mensagemFinal2_v5.wav';
+/*no valor de */
 
-$mensagem_finalv6 = 'mensagem_finalv6.wav';
-/*Em caso de dúvidas, entre em contato com a nossa equipe pelo telefone zero, oito, zero, zero, seis, quatro, sete, zero, zero, dois, seis.*/
+$mensagemFinal2_v6 = 'mensagemFinal2_v6.wav';
+/*com o titulo número*/
+
+$mensagemFinal2_v7 = 'mensagemFinal2_v7.wav';
+/*e seu prazo de pagamento é até */
+
+$mensagemFinal2_v8 = 'mensagemFinal2_v8.wav';
+/*Em caso de dúvidas, entre em contato com a nossa equipe pelo telefone zero oito zero zero seis quatro sete zero zero dois seis.*/
+
+$mensagemFinal2_v10 = 'mensagemFinal2_v10.wav';
+/*Titulo número...*/
 
 $agradecimento = 'agradecimento.wav';
 /*A Unimed Blumenau agradece por sua atenção!*/
 
 
 class EtapaConfirmacao {
-    public static function handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $dtNasc, $idDocumento, $nrCarteirinha) {
+    public static function handle($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $dtNasc, $idDocumento, $nrCarteirinha, $nrTitulo, $nrSaldoTitulo, $nrDiasAtraso, $qtdFaturas, $prazoPagto) {
         global $nrEtapa, $putUnimedAPI;
         $agi->verbose("Usuário digitou '1' para sim.");
+        $agi->verbose("Confirmacao: Protocolo: $nrProtocolo, Nascimento: $dtNasc, Documento: $idDocumento, Carteirinha: $nrCarteirinha");
+        $agi->verbose("Quantidade de faturas: " . $qtdFaturas);
+        for ($i = 1; $i <= $qtdFaturas; $i++) {
+            $agi->verbose("Quantidade de faturas: " . $qtdFaturas[$i - 1]);
+            $agi->verbose("Quantidade de dias de atraso: " . $nrDiasAtraso[$i - 1]);
+            $agi->verbose("NR_TITULO[$i]: " . $nrTitulo[$i - 1]);
+            $agi->verbose("VL_SALDO_TITULO[$i]: " . $nrSaldoTitulo[$i - 1]);
+            $agi->verbose("DT_DIAS_ATRASO[$i]: " . $nrDiasAtraso[$i - 1]);
+        }
+        $agi->verbose("Prazo para pagamento: " . $prazoPagto);
         //Estagio 0 (Cliente confirmou ser ele)
         $response = $putUnimedAPI->sendRequest($nrProtocolo, $nrEtapa, '0');
         self::etapaConfirmacao_P2_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id, $nrProtocolo, $dtNasc, $idDocumento, $nrCarteirinha);
@@ -216,114 +235,80 @@ class EtapaConfirmacao {
             }
         }
     }
-
+   
     private static function etapaConfirmacao_P5_audio($agi, $ibmWatson, $converter, $work_dir, $voice, $id) {
-        global $imut_audiosDir, $mensagem_finalv1, $mensagem_finalv2, $mensagem_finalv3, $mensagem_finalv4, $mensagem_finalv5, $mensagem_finalv6, $agradecimento, $nrProtocolo, $nrEtapa, $putUnimedAPI;
-        //Estagio 6 (Cliente acertou sua data de aniversário, redirecionado ao aúdio final de suas faturas)
+        global $imut_audiosDir, $mensagemFinal2_v1, $mensagemFinal2_v2, $mensagemFinal2_v3, $mensagemFinal2_v4, $mensagemFinal2_v5, $mensagemFinal2_v6, $mensagemFinal2_v7, $mensagemFinal2_v8, $agradecimento, $nrProtocolo, $nrEtapa, $putUnimedAPI, $nrTitulo, $nrSaldoTitulo, $nrDiasAtraso, $qtdFaturas, $prazoPagto;
+    
+        // Estágio 6 (Cliente acertou sua data de aniversário, redirecionado ao áudio final de suas faturas)
         $response = $putUnimedAPI->sendRequest($nrProtocolo, $nrEtapa, '6');
-        $data_vencida = "18 de Julho de 2002";
-        $valor_atraso = "1200 reais e 20 centavos";
-        $numero_titulo = '11671213920';
-        $dias_atraso = "17 dias.";
-        $diaPrazo = "20 de Julho de 2002";
     
+        // Gerando áudios temporários para serem utilizados num array de mensagens.
+        for ($i = 1; $i <= $qtdFaturas; $i++) {
+            // Gerando áudio temporário saldo. Ex: R$ 200.56 [quantidade de pendências abertas]
+            $texto = "R$ " . $nrSaldoTitulo[$i - 1];
+            $agi->verbose("Gerando áudio para " . $nrSaldoTitulo[$i - 1]);
+            $alawFile = self::mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
+            $saldoTitulo[$i] = "/" . $id . '_saldo_' . $i . '.wav';
+            exec("mv {$alawFile} {$work_dir}{$saldoTitulo[$i]}");
+            exec("mv {$alawFile}.alaw {$work_dir}{$saldoTitulo[$i]}.alaw");
+            $agi->verbose("Gerado áudio para " . $work_dir . $saldoTitulo[$i]);
     
-        // Gerando áudio para data vencida
-        $texto = $data_vencida;
+            // Gerando áudio título do saldo. Ex: 12344566 [quantidade de pendências abertas]
+            $texto = self::numberToWords($nrTitulo[$i - 1]);
+            $agi->verbose("Gerando áudio para " . $nrTitulo[$i - 1]);
+            $alawFile = self::mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
+            $idTitulo[$i] = "/" . $id . '_titulo_' . $i . '.wav';
+            exec("mv {$alawFile} {$work_dir}{$idTitulo[$i]}");
+            exec("mv {$alawFile}.alaw {$work_dir}{$idTitulo[$i]}.alaw");
+            $agi->verbose("Gerado áudio para " . $work_dir . $idTitulo[$i]);
+    
+            // Gerando áudio para dias de atraso. Ex: 84 [quantidade de pendências abertas]
+            $texto = self::numberToWords($nrDiasAtraso[$i - 1]);
+            $agi->verbose("Gerando áudio para " . $nrDiasAtraso[$i - 1]);
+            $alawFile = self::mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
+            $diasAtraso[$i] = "/" . $id . '_diasAtraso_' . $i . '.wav';
+            exec("mv {$alawFile} {$work_dir}{$diasAtraso[$i]}");
+            exec("mv {$alawFile}.alaw {$work_dir}{$diasAtraso[$i]}.alaw");
+            $agi->verbose("Gerado áudio para " . $work_dir . $diasAtraso[$i]);
+        }
+    
+        $texto = self::numberToWords($qtdFaturas);
+        $agi->verbose("Gerando áudio para " . $qtdFaturas);
         $alawFile = self::mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
-        $data_vencida = "/" . $id . '_data_vencida.wav'; // Certifique-se de que $work_dir já termina com '/'
-        exec("mv {$alawFile} {$work_dir}{$data_vencida}");
-        exec("mv {$alawFile}.alaw {$work_dir}{$data_vencida}.alaw");
-    
-        // Gerando áudio para valor em atraso
-        $texto = $valor_atraso;
-        $alawFile = self::mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
-        $valor_atraso = "/" . $id . '_valor_atraso.wav'; // Certifique-se de que $work_dir já termina com '/'
-        exec("mv {$alawFile} {$work_dir}{$valor_atraso}");
-        exec("mv {$alawFile}.alaw {$work_dir}{$valor_atraso}.alaw");
-    
-        // Gerando áudio para numero de titulo
-        $texto = self::numberToWords($numero_titulo);
-        $alawFile = self::mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
-        $numero_titulo = "/" . $id . '_numero_titulo.wav';
-        exec("mv {$alawFile} {$work_dir}{$numero_titulo}");
-        exec("mv {$alawFile}.alaw {$work_dir}{$numero_titulo}.alaw");
-    
-    
-        // Gerando áudio para dias de atraso
-        $texto = $dias_atraso;
-        $alawFile = self::mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
-        $dias_atraso = "/" . $id . '_dias_atraso.wav';
-        exec("mv {$alawFile} {$work_dir}{$dias_atraso}");
-        exec("mv {$alawFile}.alaw {$work_dir}{$dias_atraso}.alaw");
-    
-    
-        // Gerando áudio para dias de prazo
-        $texto = $diaPrazo;
-        $alawFile = self::mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter);
-        $diaPrazo = "/" . $id . '_diaPrazo.wav';
-        exec("mv {$alawFile} {$work_dir}{$diaPrazo}");
-        exec("mv {$alawFile}.alaw {$work_dir}{$diaPrazo}.alaw");
-    
-        // Reproduzindo áudios
-        /* Estou ligando, porque identificamos valores em aberto com o vencimento em.. data vencimento */
-        $agi->verbose("Texto imutável reproduzido: " . $imut_audiosDir . $mensagem_finalv1);
-        $agi->exec("Playback", $imut_audiosDir . $mensagem_finalv1);
-        $agi->verbose("Texto temporario reproduzido: " . $work_dir . $data_vencida);
-        $agi->exec("Playback", $work_dir . $data_vencida);
-        // Excluindo arquivo temporário
-        $alawFile = $work_dir . $data_vencida;
-        self::delAudio($alawFile, $agi);
-    
-        /* no valor de.. */
-        $agi->verbose("Texto imutável reproduzido: " . $imut_audiosDir . $mensagem_finalv2);
-        $agi->exec("Playback", $imut_audiosDir . $mensagem_finalv2);
-        $agi->verbose("Texto temporario reproduzido: " . $work_dir . $valor_atraso);
-        $agi->exec("Playback", $work_dir . $valor_atraso);
-        // Excluindo arquivo temporário
-        $alawFile = $work_dir . $valor_atraso;
-        self::delAudio($alawFile, $agi);
-    
-        /* título número.. */
-        $agi->verbose("Texto imutável reproduzido: " . $imut_audiosDir . $mensagem_finalv3);
-        $agi->exec("Playback", $imut_audiosDir . $mensagem_finalv3);
-        $agi->verbose("Texto temporario reproduzido: " . $work_dir . $numero_titulo);
-        $agi->exec("Playback", $work_dir . $numero_titulo);
-        // Excluindo arquivo temporário
-        $alawFile = $work_dir . $numero_titulo;
-        self::delAudio($alawFile, $agi);
-    
-        /* esta fatura está em atraso a.. */
-        $agi->verbose("Texto imutável reproduzido: " . $imut_audiosDir . $mensagem_finalv4);
-        $agi->exec("Playback", $imut_audiosDir . $mensagem_finalv4);
-        $agi->verbose("Texto temporario reproduzido: " . $work_dir . $dias_atraso);
-        $agi->exec("Playback", $work_dir . $dias_atraso);
-        // Excluindo arquivo temporário
-        $alawFile = $work_dir . $dias_atraso;
-        self::delAudio($alawFile, $agi);
-    
-        /* Falar a mesma coisa sobre as demais faturas em aberto caso tenha. Informamos que o prazo para pagamento a fim de evitar o cancelamento é até.. */
-        $agi->verbose("Texto imutável reproduzido: " . $imut_audiosDir . $mensagem_finalv5);
-        $agi->exec("Playback", $imut_audiosDir . $mensagem_finalv5);
-        $agi->verbose("Texto temporario reproduzido: " . $work_dir . $diaPrazo);
-        $agi->exec("Playback", $work_dir . $diaPrazo);
-        // Excluindo arquivo temporário
-        $alawFile = $work_dir . $diaPrazo;
-        self::delAudio($alawFile, $agi);
-    
-        $agi->verbose("Texto imutável reproduzido: " . $imut_audiosDir . $mensagem_finalv6);
-        $agi->exec("Playback", $imut_audiosDir . $mensagem_finalv6);
+        $quantidadeFaturas = "/" . $id . '_qtdFatura' . '.wav';
+        exec("mv {$alawFile} {$work_dir}{$quantidadeFaturas}");
+        exec("mv {$alawFile}.alaw {$work_dir}{$quantidadeFaturas}.alaw");
+        $agi->verbose("Gerado áudio para " . $work_dir . $quantidadeFaturas);
 
-
-
+        $agi->exec("Playback", $imut_audiosDir . $mensagemFinal2_v1);
+        $agi->exec("Playback", $work_dir . $quantidadeFaturas);
+        $agi->exec("Playback", $imut_audiosDir . $mensagemFinal2_v2);
+        $agi->verbose("Quantidade de faturas abertas: " . $qtdFaturas);
+        if ($qtdFaturas == 1) {
+            $agi->exec("Playback", $imut_audiosDir . $mensagemFinal2_v10);
+            $agi->exec("Playback", $work_dir . $idTitulo[1]);
+            $agi->exec("Playback", $imut_audiosDir . $mensagemFinal2_v5);
+            $agi->exec("Playback", $work_dir . $saldoTitulo[1]);
+            $agi->exec("Playback", $imut_audiosDir . $mensagemFinal2_v4);
+            $agi->exec("Playback", $work_dir . $diasAtraso[1]);
+        } else {
+            for ($i = 1; $i <= $qtdFaturas; $i++) {
+                $agi->exec("Playback", $imut_audiosDir . $mensagemFinal2_v10);
+                $agi->exec("Playback", $work_dir . $idTitulo[$i]);
+                $agi->exec("Playback", $imut_audiosDir . $mensagemFinal2_v5);
+                $agi->exec("Playback", $work_dir . $saldoTitulo[$i]);
+                $agi->exec("Playback", $imut_audiosDir . $mensagemFinal2_v6);
+                $agi->exec("Playback", $work_dir . $diasAtraso[$i]);
+            }
+        }
         $agi->verbose("Texto imutável reproduzido: " . $imut_audiosDir . $agradecimento);
         //Estagio 7 (Cliente chegou até o final e escutou tudo)
         $response = $putUnimedAPI->sendRequest($nrProtocolo, $nrEtapa, '7');
         $agi->exec("Playback", $imut_audiosDir . $agradecimento);
+        $agi->exec("Playback", $imut_audiosDir . $mensagemFinal2_v8);
         $agi->hangup();
-    }    
+    }
     
-
     private static function mkAudio($texto, $voice, $id, $work_dir, $agi, $ibmWatson, $converter) {
         $outputFile = $ibmWatson->synthesizeAudio($texto, $voice, $id);
         $alawFile = $converter->convertToAlaw($outputFile, $work_dir, $id);
